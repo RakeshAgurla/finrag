@@ -11,9 +11,9 @@ whether each component earns its place. This repo is organised around measuring
 that.
 
 ```bash
-git clone <this-repo> && cd finrag
-pip install -e ".[dev]"
-FINRAG_EMBEDDING_BACKEND=hash python -m finrag.eval.run_eval
+cd ~/dev/finrag
+sed -i '' 's|git clone <this-repo>|git clone https://github.com/RakeshAgurla/finrag.git|' README.md
+grep -n "git clone" README.md
 ```
 
 No API keys, no model downloads, no network. Runs in under a second.
