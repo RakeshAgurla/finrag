@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finrag"
+version = "0.1.0"
+description = "Hybrid retrieval over SEC filings with a falsifiable eval harness"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+models = ["sentence-transformers>=2.6", "faiss-cpu>=1.7"]
+serve = ["fastapi>=0.110", "uvicorn>=0.29", "pydantic>=2.6"]
+ingest = ["httpx>=0.27", "beautifulsoup4>=4.12", "lxml>=5.0"]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
