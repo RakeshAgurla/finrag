@@ -1,5 +1,7 @@
 # finrag
 
+[![ci](https://github.com/RakeshAgurla/finrag/actions/workflows/ci.yml/badge.svg)](https://github.com/RakeshAgurla/finrag/actions/workflows/ci.yml)
+
 Hybrid retrieval over SEC filings, built so that every performance claim in this
 README can be reproduced by running one command.
 
