@@ -1,0 +1,71 @@
+{
+  "corpus_chunks": 5,
+  "gold_questions": 8,
+  "embedding_backend": "hash",
+  "results": [
+    {
+      "config": "dense_only",
+      "mrr": 0.625,
+      "recall@1": 0.5,
+      "hit_rate@1": 0.5,
+      "ndcg@1": 0.5,
+      "recall@3": 0.5625,
+      "hit_rate@3": 0.625,
+      "ndcg@3": 0.5484,
+      "recall@5": 0.875,
+      "hit_rate@5": 0.875,
+      "ndcg@5": 0.6857,
+      "recall@10": 0.875,
+      "hit_rate@10": 0.875,
+      "ndcg@10": 0.6857
+    },
+    {
+      "config": "bm25_only",
+      "mrr": 0.6875,
+      "recall@1": 0.5,
+      "hit_rate@1": 0.5,
+      "ndcg@1": 0.5,
+      "recall@3": 0.875,
+      "hit_rate@3": 0.875,
+      "ndcg@3": 0.7444,
+      "recall@5": 0.875,
+      "hit_rate@5": 0.875,
+      "ndcg@5": 0.7444,
+      "recall@10": 0.875,
+      "hit_rate@10": 0.875,
+      "ndcg@10": 0.7444
+    },
+    {
+      "config": "hybrid_rrf",
+      "mrr": 0.6667,
+      "recall@1": 0.5,
+      "hit_rate@1": 0.5,
+      "ndcg@1": 0.5,
+      "recall@3": 0.8125,
+      "hit_rate@3": 0.875,
+      "ndcg@3": 0.6897,
+      "recall@5": 0.875,
+      "hit_rate@5": 0.875,
+      "ndcg@5": 0.7227,
+      "recall@10": 0.875,
+      "hit_rate@10": 0.875,
+      "ndcg@10": 0.7227
+    },
+    {
+      "config": "hybrid_weighted",
+      "mrr": 0.8125,
+      "recall@1": 0.6875,
+      "hit_rate@1": 0.75,
+      "ndcg@1": 0.75,
+      "recall@3": 0.8125,
+      "hit_rate@3": 0.875,
+      "ndcg@3": 0.7805,
+      "recall@5": 0.875,
+      "hit_rate@5": 0.875,
+      "ndcg@5": 0.8135,
+      "recall@10": 0.875,
+      "hit_rate@10": 0.875,
+      "ndcg@10": 0.8135
+    }
+  ]
+}

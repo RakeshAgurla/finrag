@@ -1,0 +1,45 @@
+# Gold question set for real-corpus evaluation.
+#
+# Labels are defined against SECTIONS, not chunk ids, so that changing chunk
+# size does not invalidate the set. run_eval resolves section -> chunk ids at
+# load time.
+#
+# gain: 2 = directly answers  |  1 = relevant supporting context  |  0 = not relevant
+#
+# Guidance for adding questions -- a good eval set is adversarial, not a
+# highlight reel. Aim for roughly:
+#   40% paraphrase questions   (dense should win)
+#   30% exact-identifier       (BM25 should win: "ASC 606", dollar figures)
+#   20% multi-section          (rewards recall over precision@1)
+#   10% questions with NO answer in the corpus (tests abstention)
+
+questions:
+  - id: q1
+    question: "What supply chain risks were disclosed regarding raw materials?"
+    labels:
+      - { ticker: ACME, fiscal_year: 2023, section: "1A", gain: 2 }
+      - { ticker: ACME, fiscal_year: 2022, section: "1A", gain: 1 }
+    note: "Paraphrase. Dense should carry this."
+
+  - id: q2
+    question: "How much incremental tariff cost was incurred in fiscal 2023?"
+    labels:
+      - { ticker: ACME, fiscal_year: 2023, section: "1A", gain: 2 }
+    note: "Exact figure. BM25 carries it; pure dense often misses."
+
+  - id: q4
+    question: "What revenue recognition policy applies under ASC 606?"
+    labels:
+      - { ticker: ACME, fiscal_year: 2023, section: "8", gain: 2 }
+    note: "Standard identifier. Dense reliably fails on 'ASC 606'."
+
+  - id: q7
+    question: "Did the company make any acquisitions?"
+    labels:
+      - { ticker: ACME, fiscal_year: 2022, section: "7", gain: 2 }
+    note: "KNOWN FAILURE. Answer only in prior year; recency buries it."
+
+  - id: q9
+    question: "What is the company's dividend policy for fiscal 2025?"
+    labels: []
+    note: "No answer in corpus. Correct behaviour is abstention."
