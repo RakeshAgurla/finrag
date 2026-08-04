@@ -1,0 +1,40 @@
+name: ci
+
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests
+      - run: pytest tests -q --cov=finrag --cov-report=term-missing
+        env:
+          FINRAG_EMBEDDING_BACKEND: hash
+
+  eval:
+    # The eval is a CI gate, not a notebook someone ran once. A retrieval
+    # regression fails the build like any other bug.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip }
+      - run: pip install -e ".[dev]"
+      - run: python -m finrag.eval.run_eval --out evals/results.json
+        env:
+          FINRAG_EMBEDDING_BACKEND: hash
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: evals/results.json
