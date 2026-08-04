@@ -22,9 +22,9 @@ from __future__ import annotations
 import json
 import math
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
 
 import numpy as np
 
@@ -251,5 +251,4 @@ def load_chunks(path: Path) -> list[Chunk]:
 def save_chunks(chunks: list[Chunk], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as fh:
-        for chunk in chunks:
-            fh.write(json.dumps(chunk.to_dict()) + "\n")
+        fh.writelines(json.dumps(chunk.to_dict()) + "\n" for chunk in chunks)

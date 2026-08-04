@@ -15,7 +15,7 @@ most commonly skipped. The eval harness quantifies it; see `make eval`.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from finrag.config import RerankConfig, settings
 from finrag.index.hybrid import RetrievedChunk

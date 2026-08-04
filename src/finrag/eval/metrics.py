@@ -20,9 +20,9 @@ failure modes that actually matter, so EvalResult keeps per-query rows.
 from __future__ import annotations
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from statistics import mean
-from typing import Sequence
 
 
 def recall_at_k(retrieved_ids: Sequence[str], relevant_ids: set[str], k: int) -> float:

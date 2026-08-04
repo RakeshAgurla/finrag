@@ -18,7 +18,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from finrag.config import settings
 from finrag.eval.run_eval import build_corpus
 from finrag.index.hybrid import HybridRetriever
 from finrag.rag.pipeline import RagPipeline

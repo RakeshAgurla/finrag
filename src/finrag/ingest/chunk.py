@@ -20,8 +20,8 @@ every chunk with its provenance.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable, Iterator
 from dataclasses import asdict, dataclass, field
-from typing import Iterable, Iterator
 
 from finrag.config import ChunkConfig, settings
 
