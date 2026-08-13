@@ -1,5 +1,7 @@
 # finrag
 
+[![ci](https://github.com/RakeshAgurla/finrag/actions/workflows/ci.yml/badge.svg)](https://github.com/RakeshAgurla/finrag/actions/workflows/ci.yml)
+
 Hybrid retrieval over SEC filings, built so that every performance claim in this
 README can be reproduced by running one command.
 
@@ -9,7 +11,7 @@ whether each component earns its place. This repo is organised around measuring
 that.
 
 ```bash
-git clone <this-repo> && cd finrag
+git clone https://github.com/RakeshAgurla/finrag.git && cd finrag
 pip install -e ".[dev]"
 FINRAG_EMBEDDING_BACKEND=hash python -m finrag.eval.run_eval
 ```
@@ -187,7 +189,7 @@ made on purpose, not something that slid through.
 ## Running it
 
 ```bash
-make test                       # 23 tests, ~0.2s
+make test                       # 26 tests, ~0.2s
 make eval                       # ablation table
 make eval-full                  # real embeddings + cross-encoder
 make ingest TICKERS=AAPL,MSFT   # requires SEC_USER_AGENT
