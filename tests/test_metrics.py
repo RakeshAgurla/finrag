@@ -33,3 +33,46 @@ def test_ndcg_penalises_inversion():
 
 def test_ndcg_empty_relevance():
     assert ndcg_at_k(["a"], {}, 5) == 0.0
+
+
+def test_regression_gate_flags_a_drop(tmp_path):
+    """The gate must actually fail, not just report."""
+    import json
+
+    from finrag.eval.metrics import EvalResult, QueryResult
+    from finrag.eval.run_eval import check_regression
+
+    baseline = tmp_path / "results.json"
+    baseline.write_text(
+        json.dumps({"results": [{"config": "hybrid_rrf", "ndcg@5": 0.90, "mrr": 0.80}]})
+    )
+
+    degraded = EvalResult(
+        config_name="hybrid_rrf",
+        per_query=[
+            QueryResult("q1", "?", [], set(), {"ndcg@5": 0.50, "mrr": 0.80, "recall@5": 1.0})
+        ],
+    )
+    violations = check_regression([degraded], baseline)
+    assert len(violations) == 1 and "ndcg@5" in violations[0]
+
+
+def test_regression_gate_allows_small_noise(tmp_path):
+    import json
+
+    from finrag.eval.metrics import EvalResult, QueryResult
+    from finrag.eval.run_eval import check_regression
+
+    baseline = tmp_path / "results.json"
+    baseline.write_text(json.dumps({"results": [{"config": "c", "ndcg@5": 0.90}]}))
+    within = EvalResult(
+        config_name="c",
+        per_query=[QueryResult("q1", "?", [], set(), {"ndcg@5": 0.885})],
+    )
+    assert check_regression([within], baseline) == []
+
+
+def test_missing_baseline_is_not_a_failure(tmp_path):
+    from finrag.eval.run_eval import check_regression
+
+    assert check_regression([], tmp_path / "nope.json") == []

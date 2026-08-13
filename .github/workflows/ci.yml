@@ -31,7 +31,8 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11", cache: pip }
       - run: pip install -e ".[dev]"
-      - run: python -m finrag.eval.run_eval --out evals/results.json
+      - name: eval with regression gate
+        run: python -m finrag.eval.run_eval --out evals/results.json --check-regression
         env:
           FINRAG_EMBEDDING_BACKEND: hash
       - uses: actions/upload-artifact@v4

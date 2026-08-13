@@ -1,7 +1,5 @@
 # finrag
 
-[![ci](https://github.com/RakeshAgurla/finrag/actions/workflows/ci.yml/badge.svg)](https://github.com/RakeshAgurla/finrag/actions/workflows/ci.yml)
-
 Hybrid retrieval over SEC filings, built so that every performance claim in this
 README can be reproduced by running one command.
 
@@ -11,7 +9,7 @@ whether each component earns its place. This repo is organised around measuring
 that.
 
 ```bash
-git clone https://github.com/RakeshAgurla/finrag.git && cd finrag
+git clone <this-repo> && cd finrag
 pip install -e ".[dev]"
 FINRAG_EMBEDDING_BACKEND=hash python -m finrag.eval.run_eval
 ```
@@ -164,6 +162,27 @@ published number should have an auditable definition.
 CI runs the entire ingest → index → retrieve → evaluate loop with zero
 downloads. If a test passes offline it is testing plumbing, not model quality —
 which is exactly what a test should do.
+
+## The eval is a build gate
+
+`evals/results.json` is committed. On every push CI reruns the ablation and
+compares `recall@5`, `ndcg@5`, and `mrr` against those committed numbers. A
+drop beyond a 0.02 tolerance exits non-zero and fails the build.
+
+```bash
+python -m finrag.eval.run_eval --check-regression    # what CI runs
+python -m finrag.eval.run_eval --update-baseline     # accept a change
+```
+
+Two details that matter. A failing run does **not** rewrite the baseline —
+otherwise the next run would compare against the degraded numbers and the
+gate would silently ratchet downward. And the tolerance exists because
+tie-breaking between equal scores can differ across environments; it is set
+as tight as that instability allows rather than as loose as is comfortable.
+
+Changing the baseline requires an explicit flag and shows up as a diff in the
+commit, which is the point: a quality regression should be a decision someone
+made on purpose, not something that slid through.
 
 ## Running it
 
