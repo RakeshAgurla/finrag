@@ -207,6 +207,69 @@ curl -X POST localhost:8000/retrieve \
 no LLM call. It is cheap, deterministic, and the endpoint you actually want when
 debugging answer quality.
 
+## Performance and cost
+
+Measured on the real corpus — 833 chunks from Apple and Microsoft 10-Ks,
+FY2023–FY2026 — with 8 queries spanning exact-token and paraphrase retrieval,
+25 repeats each. Reproduce with `python -m finrag.eval.benchmark --compare`.
+
+| | hash (offline) | bge-small-en-v1.5 |
+|---|---|---|
+| index build | 0.87 s | 10.16 s |
+| retrieval p50 | 0.67 ms | 7.71 ms |
+| retrieval p95 | 1.46 ms | 8.66 ms |
+| retrieval p99 | 1.49 ms | 13.39 ms |
+| context tokens (mean) | 16,347 | **7,080** |
+| context tokens (p95) | 45,482 | 29,106 |
+
+### The expensive embedder is the cheap option
+
+Semantic embeddings cost **11.6× more to index** and **5.9× more per query**.
+They also cut generation cost roughly in half:
+
+| model | hash | bge-small | saving |
+|---|---|---|---|
+| gpt-4o-mini | $2.60 | $1.21 | 53% |
+| claude-haiku-4-5 | $17.60 | $8.33 | 53% |
+| gpt-4o | $43.37 | $20.20 | 53% |
+| claude-sonnet-4-6 | $52.79 | $24.99 | 53% |
+
+*Per 1,000 queries, at published prices, assuming a 250-token answer.*
+
+The mechanism is that better retrieval returns **shorter, more relevant**
+context. The lexical fallback was pulling 16,347 tokens of loosely-related text
+into the prompt on every query; semantic retrieval finds the right chunks and
+stops, at 7,080.
+
+So the intuition that better retrieval costs more is backwards at the system
+level. The 7ms of extra retrieval latency is imperceptible to a user. The $28
+per thousand queries is not — at any real volume, the expensive embedder pays
+for itself many times over.
+
+This is only visible because the benchmark measures **context tokens**, not just
+latency. Retrieval itself is essentially free; what you pay for is what
+retrieval decides to put in the prompt. Once that is measured, `top_k` and chunk
+size stop being arbitrary config values and become the primary cost levers in
+the system.
+
+### Notes on the numbers
+
+- **Percentiles, not means.** A mean latency hides the tail, and the tail is
+  what users experience as "sometimes it hangs". The p50/p99 spread here is
+  7.7ms to 13.4ms — tight, with no pathological tail.
+- **The first query is excluded.** It pays for lazy imports and cache warming;
+  including it would misattribute startup cost to steady state.
+- **Token counts are estimated** at ~4 chars/token rather than tokenized
+  exactly. An exact count needs the target model's tokenizer, which differs per
+  provider. The error is a few percent and biased high, which is the safe
+  direction for a cost projection.
+- **Prices are published list prices** and are kept as data in `benchmark.py`
+  rather than inlined, because they change and a stale constant buried in a
+  calculation is how a cost estimate silently becomes wrong.
+- Single machine, single run, Apple Silicon CPU, no GPU.
+
+---
+
 ## Known limitations
 
 - Tables are flattened to text during HTML extraction, so numeric questions that

@@ -1,0 +1,65 @@
+{
+  "corpus_chunks": 833,
+  "tickers": [
+    "AAPL",
+    "MSFT"
+  ],
+  "queries": 8,
+  "repeats": 25,
+  "results": [
+    {
+      "config": "hash",
+      "corpus_chunks": 833,
+      "index_build_s": 0.874,
+      "index_memory_mb": 45.3,
+      "retrieval": {
+        "n": 200,
+        "mean_ms": 0.683,
+        "p50_ms": 0.671,
+        "p95_ms": 1.456,
+        "p99_ms": 1.486,
+        "min_ms": 0.084,
+        "max_ms": 1.639
+      },
+      "context": {
+        "mean_tokens": 16346.9,
+        "p95_tokens": 45482,
+        "max_tokens": 45482,
+        "mean_chunks": 8
+      },
+      "cost_per_1k_queries": {
+        "claude-haiku-4-5": 17.5969,
+        "claude-sonnet-4-6": 52.7907,
+        "gpt-4o-mini": 2.602,
+        "gpt-4o": 43.3673
+      }
+    },
+    {
+      "config": "sentence-transformers",
+      "corpus_chunks": 833,
+      "index_build_s": 10.158,
+      "index_memory_mb": 165.1,
+      "retrieval": {
+        "n": 200,
+        "mean_ms": 8.558,
+        "p50_ms": 7.705,
+        "p95_ms": 8.662,
+        "p99_ms": 13.386,
+        "min_ms": 6.461,
+        "max_ms": 124.405
+      },
+      "context": {
+        "mean_tokens": 7080,
+        "p95_tokens": 29106,
+        "max_tokens": 29106,
+        "mean_chunks": 8
+      },
+      "cost_per_1k_queries": {
+        "claude-haiku-4-5": 8.33,
+        "claude-sonnet-4-6": 24.99,
+        "gpt-4o-mini": 1.212,
+        "gpt-4o": 20.2
+      }
+    }
+  ]
+}
